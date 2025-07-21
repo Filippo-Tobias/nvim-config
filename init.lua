@@ -11,7 +11,8 @@ if not vim.uv.fs_stat(lazypath) then
 end
 
 vim.opt.rtp:prepend(lazypath)
-
+vim.opt.breakindent = true
+vim.opt.linebreak = true
 local lazy_config = require "configs.lazy"
 
 -- load plugins
@@ -73,6 +74,7 @@ end
 --keymaps
 vim.api.nvim_set_keymap('n', '<C-Space>', ':lua vim.diagnostic.open_float()<CR>', { noremap = true, silent = true })
 vim.api.nvim_set_keymap('n', '<C-LeftMouse>', [[:lua OpenURLUnderCursor()<CR>]], { noremap = true, silent = true })
+vim.api.nvim_set_keymap('n', '<C-p>', ':noh<CR>', { noremap = true, silent = true })
 vim.keymap.set('n', 'dd', function()
   if vim.fn.getline('.'):match('^%s*$') then
     return '"_dd'
