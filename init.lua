@@ -28,9 +28,19 @@ require("lazy").setup({
     version = '^6', -- Recommended
     lazy = false, -- This plugin is already lazy
     ["rust-analyzer"] = {
-      cargo = {
-        allFeatures = true,
-      },
+    cargo = {
+      allFeatures = true,
+    },
+    on_publish_diagnostics = function(_, result, ctx)
+      if result.diagnostics then
+        -- filter out warnings with code -32801 (content modified)
+        local filtered = vim.tbl_filter(function(d)
+          return d.code ~= -32801
+        end, result.diagnostics)
+        result.diagnostics = filtered
+      end
+      vim.lsp.diagnostic.on_publish_diagnostics(_, result, ctx)
+    end,
     }
   },
   {
@@ -40,15 +50,32 @@ require("lazy").setup({
   { import = "plugins" },
 }, lazy_config)
 
+require('telescope').setup{
+  defaults = {
+    mappings = {
+      i = {
+        ["<Tab>"] = false,
+        ["<S-Tab>"] = false,
+      },
+      n = {
+        ["<Tab>"] = false,
+      },
+    },
+  },
+}
+
 -- load theme
 dofile(vim.g.base46_cache .. "defaults")
 dofile(vim.g.base46_cache .. "statusline")
 
 require "options"
 require "nvchad.autocmds"
-
 vim.schedule(function()
   require "mappings"
+end)
+
+vim.schedule(function()
+  require("tab_telescope").setup()
 end)
 
 vim.api.nvim_create_autocmd("BufReadPost", {
@@ -73,7 +100,6 @@ end
 
 --keymaps
 vim.api.nvim_set_keymap('n', '<C-Space>', ':lua vim.diagnostic.open_float()<CR>', { noremap = true, silent = true })
-vim.api.nvim_set_keymap('n', '<C-LeftMouse>', [[:lua OpenURLUnderCursor()<CR>]], { noremap = true, silent = true })
 vim.api.nvim_set_keymap('n', '<C-p>', ':noh<CR>', { noremap = true, silent = true })
 vim.keymap.set('n', 'dd', function()
   if vim.fn.getline('.'):match('^%s*$') then

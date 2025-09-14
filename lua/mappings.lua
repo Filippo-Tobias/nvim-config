@@ -1,8 +1,14 @@
 require "nvchad.mappings"
 
--- add yours here
-
 local map = vim.keymap.set
+
+-- unmap default buffer cycling
+
+vim.keymap.del("n", "<Tab>")
+vim.keymap.del("n", "<S-Tab>")
+
+map("n", "<A-l>", "<cmd>bnext<CR>", { desc = "Next buffer" })
+map("n", "<A-h>", "<cmd>bprevious<CR>", { desc = "Previous buffer" })
 
 map("n", ";", ":", { desc = "CMD enter command mode" })
 map("i", "jk", "<ESC>")
@@ -14,8 +20,8 @@ local mapping = cmp.mapping
 
 cmp.setup({
   mapping = {
-    ['<S-j>'] = mapping.select_next_item({ behavior = cmp.SelectBehavior.Select }),
-    ['<S-k>'] = mapping.select_prev_item({ behavior = cmp.SelectBehavior.Select }),
+    ['<A-j>'] = mapping.select_next_item({ behavior = cmp.SelectBehavior.Select }),
+    ['<A-k>'] = mapping.select_prev_item({ behavior = cmp.SelectBehavior.Select }),
     ['<Tab>'] = mapping.confirm({ select = true }),
     ['<C-a>'] = mapping.complete(),
     ['<CR>'] = mapping(function(fallback)
