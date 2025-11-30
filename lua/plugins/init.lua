@@ -25,14 +25,10 @@ return {
     end,
   },
 
-  {
-    "vim-denops/denops.vim",
-    lazy = false,
-  },
-  {
-    "kbwo/vim-shareedit",
-    lazy = false,
-  },
+  -- {
+  --   "vim-denops/denops.vim",
+  --   lazy = false,
+  -- },
   {
     "milanglacier/minuet-ai.nvim",
     config = function()
